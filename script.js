@@ -1,12 +1,30 @@
 let resultsContainer = document.getElementsByClassName("container")[0]
 
+
+// This function creates a debounced version of a given functino
+const debounce = (fnc, delay) => {
+    let timeOut;
+
+    return (...args) => {
+        if (timeOut) {
+            clearTimeout(timeOut)
+        }
+        timeOut = setTimeout(() => {
+            fnc.apply(this, args)
+        } , delay)
+    }
+}
+
+
 const validateInput = (el) => {
     if(el.value === ""){
         resultsContainer.innerHTML = "<p>Type something in the above search input</p>"
     }else{
-        generateResults(el.value, el)
+        // here we create the debounced function that will work after 1.5 sec and generates results
+        debounce(() => generateResults(el.value, el), 1500)();
     }
 }
+
 
 const generateResults = (searchValue, inputField) => {
     fetch(
